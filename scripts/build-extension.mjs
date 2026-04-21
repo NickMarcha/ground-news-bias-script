@@ -15,7 +15,13 @@ execSync("npx tsup --config tsup.extension.config.ts", {
 });
 
 cpSync(join(root, "extension", "manifest.json"), join(dist, "manifest.json"));
+// Toolbar / sidebar / about:addons icons live under extension/public (e.g. public/icons/icon.svg).
 cpSync(join(root, "extension", "public"), dist, { recursive: true });
+
+const assetsDir = join(root, "assets");
+if (existsSync(assetsDir)) {
+  cpSync(assetsDir, join(dist, "assets"), { recursive: true });
+}
 
 const popupGlobal = join(dist, "popup.global.js");
 const sidebarGlobal = join(dist, "sidebar.global.js");
@@ -28,4 +34,7 @@ if (existsSync(sidebarGlobal)) {
 
 if (!existsSync(join(dist, "manifest.json"))) {
   throw new Error("extension build failed: manifest missing");
+}
+if (!existsSync(join(dist, "icons", "icon.svg"))) {
+  throw new Error("extension build failed: icons/icon.svg missing (check extension/public/icons)");
 }

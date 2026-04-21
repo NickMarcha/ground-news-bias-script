@@ -3,6 +3,10 @@
   "name": "Ground News Lookup (Minimal)",
   "version": "0.1.0",
   "description": "Look up the active tab on Ground News (no page injection).",
+  "icons": {
+    "48": "icons/icon.svg",
+    "96": "icons/icon.svg"
+  },
   "permissions": ["tabs"],
   "host_permissions": [
     "https://extension.ground.news/*",
@@ -11,11 +15,21 @@
   ],
   "action": {
     "default_title": "Ground News lookup",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon.svg",
+      "32": "icons/icon.svg",
+      "48": "icons/icon.svg"
+    }
   },
   "sidebar_action": {
     "default_title": "Ground News",
-    "default_panel": "sidebar.html"
+    "default_panel": "sidebar.html",
+    "default_icon": {
+      "16": "icons/icon.svg",
+      "32": "icons/icon.svg",
+      "48": "icons/icon.svg"
+    }
   },
   "browser_specific_settings": {
     "gecko": {

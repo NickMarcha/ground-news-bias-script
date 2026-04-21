@@ -66,6 +66,15 @@ Workflow: [`.github/workflows/firefox-extension.yml`](.github/workflows/firefox-
 - Always builds the extension and uploads an **unsigned zip** artifact (`firefox-extension-unsigned-zip`) for manual upload to [AMO](https://addons.mozilla.org/) when you are getting the first version listed.
 - If you add repository secrets **`WEB_EXT_API_KEY`** and **`WEB_EXT_API_SECRET`** (from the Firefox Developer Hub API credentials used by [`web-ext sign`](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-sign)), the same workflow will also run signing and upload a **signed `.xpi`** artifact. If those secrets are missing, the sign step exits successfully with a notice and does nothing else.
 
+#### Add-on ID (`browser_specific_settings.gecko.id`)
+
+- Set in [`extension/manifest.json`](extension/manifest.json) as **`browser_specific_settings.gecko.id`**.
+- Firefox allows a stable **email-style applications ID** (`something@domain`) **or** a **braced GUID** (`{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}`). This repo uses an email-style ID; that is valid for AMO and is **not** required to be a UUID.
+- **Never change** the ID after the first public listing or AMO submission—updates are tied to that value. See Mozilla’s [Extensions and the add-on ID](https://extensionworkshop.com/documentation/develop/extensions-and-the-add-on-id/).
+- If [Developer Hub](https://addons.mozilla.org/developers/) already shows a **specific GUID** for this add-on, replace `gecko.id` with that exact braced string **once**, then keep it forever.
+
+Toolbar, sidebar, and `about:addons` icons are square **`icons/icon.svg`** under [`extension/public/icons/`](extension/public/icons/) (derived from [`assets/logo.svg`](assets/logo.svg)); the build copies `extension/public` into `extension/dist` and also bundles [`assets/`](assets/) into `extension/dist/assets/` when present.
+
 ## Development
 
 Prerequisites:
