@@ -1,0 +1,11 @@
+html,
+body {
+  margin: 0;
+  background: #161616;
+  color: #ececec;
+  font: 14px/1.45 system-ui, -apple-system, sans-serif;
+}
+
+#root {
+  min-height: 200px;
+}

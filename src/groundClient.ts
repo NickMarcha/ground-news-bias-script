@@ -1,8 +1,4 @@
-import type { GroundLookupResponse } from "./types";
-
-const LOOKUP_ENDPOINT = "https://extension.ground.news/search";
-const TOOLBAR_ENDPOINT =
-  "https://production.checkitt.news/api/public/extension/toolbarData";
+import { fetchGroundDataWithGetter } from "./lookupCore";
 
 function gmGetJson<T>(url: string): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -27,39 +23,8 @@ function gmGetJson<T>(url: string): Promise<T> {
   });
 }
 
-export function normalizeLookupUrl(rawUrl: string): string {
-  const url = new URL(rawUrl);
-  const dropParams = [
-    "utm_source",
-    "utm_medium",
-    "utm_campaign",
-    "utm_term",
-    "utm_content",
-    "gclid",
-    "fbclid"
-  ];
+export { normalizeLookupUrl } from "./lookupCore";
 
-  for (const key of dropParams) {
-    url.searchParams.delete(key);
-  }
-
-  return url.toString();
-}
-
-export async function fetchGroundDataForUrl(
-  pageUrl: string
-): Promise<GroundLookupResponse> {
-  const normalizedUrl = normalizeLookupUrl(pageUrl);
-  const lookup = await gmGetJson<{
-    event?: { id?: string };
-    source?: { id?: string };
-  }>(`${LOOKUP_ENDPOINT}?url=${encodeURIComponent(normalizedUrl)}`);
-
-  const storyId = lookup.event?.id;
-  const sourceId = lookup.source?.id;
-  if (!storyId || !sourceId) {
-    throw new Error("No Ground News story found for this URL");
-  }
-
-  return gmGetJson<GroundLookupResponse>(`${TOOLBAR_ENDPOINT}/${storyId}/${sourceId}`);
+export function fetchGroundDataForUrl(pageUrl: string) {
+  return fetchGroundDataWithGetter(pageUrl, gmGetJson);
 }

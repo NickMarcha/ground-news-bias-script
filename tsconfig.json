@@ -9,9 +9,12 @@
       "ES2022",
       "DOM"
     ],
-    "types": []
+    "types": [
+      "firefox-webext-browser"
+    ]
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "extension/src/**/*.ts"
   ]
 }

@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Ground News Lookup (Minimal)",
+  "version": "0.1.0",
+  "description": "Look up the active tab on Ground News (no page injection).",
+  "permissions": ["tabs"],
+  "host_permissions": [
+    "https://extension.ground.news/*",
+    "https://production.checkitt.news/*",
+    "https://groundnews.b-cdn.net/*"
+  ],
+  "action": {
+    "default_title": "Ground News lookup",
+    "default_popup": "popup.html"
+  },
+  "sidebar_action": {
+    "default_title": "Ground News",
+    "default_panel": "sidebar.html"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ground-news-lookup-minimal@nickmarcha.github",
+      "strict_min_version": "109.0"
+    }
+  }
+}

@@ -5,10 +5,13 @@
   "scripts": {
     "build": "npx tsup",
     "dev": "npx tsup --watch",
-    "check": "npx tsc --noEmit"
+    "check": "npx tsc --noEmit",
+    "build:extension": "node scripts/build-extension.mjs"
   },
   "devDependencies": {
+    "@types/firefox-webext-browser": "^120.0.3",
     "tsup": "^8.3.6",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "web-ext": "^8.3.0"
   }
 }

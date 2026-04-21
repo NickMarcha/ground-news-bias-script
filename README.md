@@ -7,6 +7,10 @@ Manual lookup userscript for Ground News data with minimal interference:
 - User-triggered lookup via userscript menu command.
 - TypeScript source and GitHub Actions build pipeline.
 
+## Preview
+
+![Ground News lookup panel on a news article](docs/preview.png)
+
 ## Disclaimer
 
 This project is maintained independently by its contributors. It has **no affiliation** with Ground News, its operators, or any related company or organization, and is **not** endorsed or sponsored by them. References to Ground News are for identification of the service the userscript interacts with only.
@@ -33,6 +37,29 @@ Then open any article page and use the manager menu:
 
 - **Ground News: Check Current Page**
 
+## Firefox extension (toolbar popup + sidebar)
+
+Source lives under [`extension/`](extension/). The built, loadable package is produced in `extension/dist/` (not committed).
+
+- **Toolbar**: click the extension action to open a popup that looks up the **active tab’s URL** (no content scripts on arbitrary sites).
+- **Sidebar**: open **View → Sidebar → Ground News** (wording may vary by Firefox locale). The panel refreshes when you switch tabs or when the active tab finishes loading.
+
+### Local build
+
+```bash
+npm ci
+npm run build:extension
+```
+
+Then in Firefox: `about:debugging` → **This Firefox** → **Load Temporary Add-on** → choose `extension/dist/manifest.json`.
+
+### AMO / CI signing
+
+Workflow: [`.github/workflows/firefox-extension.yml`](.github/workflows/firefox-extension.yml)
+
+- Always builds the extension and uploads an **unsigned zip** artifact (`firefox-extension-unsigned-zip`) for manual upload to [AMO](https://addons.mozilla.org/) when you are getting the first version listed.
+- If you add repository secrets **`WEB_EXT_API_KEY`** and **`WEB_EXT_API_SECRET`** (from the Firefox Developer Hub API credentials used by [`web-ext sign`](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-sign)), the same workflow will also run signing and upload a **signed `.xpi`** artifact. If those secrets are missing, the sign step exits successfully with a notice and does nothing else.
+
 ## Development
 
 Prerequisites:
@@ -50,7 +77,7 @@ Output:
 
 ## GitHub Workflow
 
-Workflow file:
+Userscript workflow:
 - `.github/workflows/userscript.yml`
 
 Behavior:
@@ -62,19 +89,20 @@ Behavior:
 
 ## Roadmap and plan (what’s left)
 
-### Done (reverse-engineering / v1 userscript)
+### Done
 
 - Confirmed lookup flow: `extension.ground.news/search` → IDs → `production.checkitt.news/.../toolbarData/...` (anonymous, no login required for basic bias/coverage).
-- Userscript: menu-triggered lookup, small results panel, TypeScript + CI.
+- Userscript: menu-triggered lookup, results panel, TypeScript + CI.
+- Shared lookup + panel HTML: [`src/lookupCore.ts`](src/lookupCore.ts), [`src/panelHtml.ts`](src/panelHtml.ts) (used by userscript and the Firefox extension).
+- Firefox MV3 scaffold: toolbar **popup** + **sidebar**, narrow `host_permissions`, no global page injection ([`extension/manifest.json`](extension/manifest.json)).
+- CI: extension build + zip artifact; optional `web-ext sign` when API secrets exist.
 
-### To do — Firefox extension (toolbar + sidebar)
+### To do
 
-- [ ] **New MV3 extension** in this repo (or sibling package): toolbar button opens lookup for the active tab URL only (no global `content_scripts` on all sites).
-- [ ] **Optional sidebar** (`sidebar_action`) to show the same summary and a link to full Ground News coverage, refresh on explicit action or tab change.
-- [ ] **Minimal permissions**: prefer `activeTab` + narrow `host_permissions` for Ground API hosts only; avoid `<all_urls>` and avoid always-on page injection.
-- [ ] **Shared TypeScript core**: extract URL normalization + `fetchGroundDataForUrl` (or equivalent using `fetch` in extension context) into a `packages/core`-style module reused by the userscript build and the extension.
-- [ ] **Distribution**: document temporary add-on load vs signed builds; AMO listing is optional and separate from the userscript install path.
-- [ ] **Optional later**: login / save-article flows (not in v1 userscript); only if you want parity with the official extension.
+- [ ] **First AMO submission** (manual): upload the unsigned zip from the `firefox-extension-unsigned-zip` artifact, then align `extension/manifest.json` gecko id / version with what AMO expects.
+- [ ] **Turn on automated signing** after first listing: add `WEB_EXT_API_KEY` and `WEB_EXT_API_SECRET`; confirm signed artifact upload and update docs with install links if you distribute outside AMO.
+- [ ] **Polish**: icons for the extension action, debounced sidebar refresh, optional `activeTab` vs `tabs` review.
+- [ ] **Optional later**: login / save-article flows; not required for minimal lookup.
 
 ### To do — userscript polish (optional)
 
