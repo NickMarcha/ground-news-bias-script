@@ -34,7 +34,10 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "ground-news-lookup-minimal@nickmarcha.github",
-      "strict_min_version": "109.0"
+      "strict_min_version": "109.0",
+      "data_collection_permissions": {
+        "required": ["browsingActivity"]
+      }
     }
   },
   "content_security_policy": {

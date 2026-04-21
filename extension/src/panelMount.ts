@@ -1,8 +1,11 @@
-export function setPanelHtml(html: string): void {
+import type { PanelView } from "./panelDom";
+import { renderPanel } from "./panelDom";
+
+export function mountPanel(view: PanelView): void {
   document.getElementById("gn-boot")?.remove();
   const root = document.getElementById("root");
   if (!root) {
     return;
   }
-  root.innerHTML = html;
+  renderPanel(root, view);
 }

@@ -1,11 +1,6 @@
 import { fetchGroundDataExtension } from "./fetchExtension";
 import { getExtension } from "./extensionRuntime";
-import { setPanelHtml } from "./panelMount";
-import {
-  buildErrorPanelHtml,
-  buildLoadingHtml,
-  buildResultPanelHtml
-} from "../../src/panelHtml";
+import { mountPanel } from "./panelMount";
 
 function bindClose(): void {
   document.querySelector("#gn-close-btn")?.addEventListener("click", () => {
@@ -14,7 +9,7 @@ function bindClose(): void {
 }
 
 async function main(): Promise<void> {
-  setPanelHtml(buildLoadingHtml());
+  mountPanel({ type: "loading" });
   const ext = getExtension();
 
   const tabs = await ext.tabs.query({ active: true, currentWindow: true });
@@ -22,26 +17,25 @@ async function main(): Promise<void> {
   const url = tab?.url;
 
   if (!url || !/^https?:\/\//i.test(url)) {
-    setPanelHtml(
-      buildErrorPanelHtml("Open a normal http(s) tab to look up this page.", {
-        showClose: true
-      })
-    );
+    mountPanel({
+      type: "error",
+      message: "Open a normal http(s) tab to look up this page.",
+      showClose: true
+    });
     bindClose();
     return;
   }
 
   try {
     const result = await fetchGroundDataExtension(url);
-    setPanelHtml(buildResultPanelHtml(result, { showClose: true }));
+    mountPanel({ type: "result", result, showClose: true });
     bindClose();
   } catch (error) {
-    setPanelHtml(
-      buildErrorPanelHtml(
-        error instanceof Error ? error.message : "Lookup failed",
-        { showClose: true }
-      )
-    );
+    mountPanel({
+      type: "error",
+      message: error instanceof Error ? error.message : "Lookup failed",
+      showClose: true
+    });
     bindClose();
   }
 }
