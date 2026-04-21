@@ -53,6 +53,8 @@ npm run build:extension
 
 Then in Firefox: `about:debugging` → **This Firefox** → **Load Temporary Add-on** → choose `extension/dist/manifest.json`.
 
+If the popup or sidebar looks blank or DevTools reports **Quirks Mode** for `popup.html` / `sidebar.html`, rebuild with `npm run build:extension` so `extension/dist/` picks up the latest HTML (first line must be `<!DOCTYPE html>` with no BOM). The panel HTML uses **deferred** scripts and full-height CSS so the sidebar iframe gets a usable layout.
+
 ### AMO / CI signing
 
 Workflow: [`.github/workflows/firefox-extension.yml`](.github/workflows/firefox-extension.yml)
