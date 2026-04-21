@@ -39,19 +39,21 @@ Then open any article page and use the manager menu:
 
 ## Firefox extension (toolbar popup + sidebar)
 
-Source lives under [`extension/`](extension/). The built, loadable package is produced in `extension/dist/` (not committed).
+Source lives under [`extension/`](extension/). The built, loadable package is produced in `extension/dist/` (not committed to git).
 
 - **Toolbar**: click the extension action to open a popup that looks up the **active tab’s URL** (no content scripts on arbitrary sites).
 - **Sidebar**: open **View → Sidebar → Ground News** (wording may vary by Firefox locale). The panel refreshes when you switch tabs or when the active tab finishes loading.
 
 ### Local build
 
+You **must** run the build at least once on your machine (or use the CI artifact zip): Firefox loads files from `extension/dist/`, which only exists after:
+
 ```bash
 npm ci
 npm run build:extension
 ```
 
-Then in Firefox: `about:debugging` → **This Firefox** → **Load Temporary Add-on** → choose `extension/dist/manifest.json`.
+Then in Firefox: `about:debugging` → **This Firefox** → **Load Temporary Add-on** → choose `extension/dist/manifest.json`. After changing extension code, run `npm run build:extension` again and use **Reload** on the temporary add-on.
 
 If the popup or sidebar looks **blank**, the usual cause is Firefox MV3’s **default extension CSP**: it does not allow cross-origin `fetch()` or rich `innerHTML` with inline `style=""` attributes unless you declare a matching policy. This repo sets `content_security_policy.extension_pages` in [`extension/manifest.json`](extension/manifest.json) (including `connect-src` for Ground hosts and `style-src 'unsafe-inline'` for the panel markup).
 
@@ -98,7 +100,7 @@ Behavior:
 - Confirmed lookup flow: `extension.ground.news/search` → IDs → `production.checkitt.news/.../toolbarData/...` (anonymous, no login required for basic bias/coverage).
 - Userscript: menu-triggered lookup, results panel, TypeScript + CI.
 - Shared lookup + panel HTML: [`src/lookupCore.ts`](src/lookupCore.ts), [`src/panelHtml.ts`](src/panelHtml.ts) (used by userscript and the Firefox extension).
-- Firefox MV3 scaffold: toolbar **popup** + **sidebar**, narrow `host_permissions`, no global page injection ([`extension/manifest.json`](extension/manifest.json)).
+- Firefox MV3: toolbar **popup** + **sidebar**, narrow `host_permissions`, explicit `content_security_policy` for Ground `fetch` / images / panel styles, no global page injection ([`extension/manifest.json`](extension/manifest.json)).
 - CI: extension build + zip artifact; optional `web-ext sign` when API secrets exist.
 
 ### To do
