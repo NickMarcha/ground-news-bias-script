@@ -53,7 +53,9 @@ npm run build:extension
 
 Then in Firefox: `about:debugging` → **This Firefox** → **Load Temporary Add-on** → choose `extension/dist/manifest.json`.
 
-If the popup or sidebar looks blank or DevTools reports **Quirks Mode** for `popup.html` / `sidebar.html`, rebuild with `npm run build:extension` so `extension/dist/` picks up the latest HTML (first line must be `<!DOCTYPE html>` with no BOM). The panel HTML uses **deferred** scripts and full-height CSS so the sidebar iframe gets a usable layout.
+If the popup or sidebar looks **blank**, the usual cause is Firefox MV3’s **default extension CSP**: it does not allow cross-origin `fetch()` or rich `innerHTML` with inline `style=""` attributes unless you declare a matching policy. This repo sets `content_security_policy.extension_pages` in [`extension/manifest.json`](extension/manifest.json) (including `connect-src` for Ground hosts and `style-src 'unsafe-inline'` for the panel markup).
+
+If DevTools still reports **Quirks Mode**, confirm the **selected frame** is your `moz-extension://…/sidebar.html` document (not a parent chrome document). The HTML must start with `<!DOCTYPE html>` with no BOM; rebuild with `npm run build:extension` after pulling.
 
 ### AMO / CI signing
 

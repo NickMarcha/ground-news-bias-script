@@ -1,4 +1,5 @@
 import { fetchGroundDataExtension } from "./fetchExtension";
+import { getExtension } from "./extensionRuntime";
 import {
   buildErrorPanelHtml,
   buildLoadingHtml,
@@ -6,6 +7,7 @@ import {
 } from "../../src/panelHtml";
 
 function setRoot(html: string): void {
+  document.getElementById("gn-boot")?.remove();
   const root = document.getElementById("root");
   if (!root) {
     return;
@@ -15,8 +17,9 @@ function setRoot(html: string): void {
 
 async function refresh(): Promise<void> {
   setRoot(buildLoadingHtml());
+  const ext = getExtension();
 
-  const tabs = await browser.tabs.query({ active: true, currentWindow: true });
+  const tabs = await ext.tabs.query({ active: true, currentWindow: true });
   const tab = tabs[0];
   const url = tab?.url;
 
@@ -44,15 +47,15 @@ async function refresh(): Promise<void> {
 
 void refresh();
 
-browser.tabs.onActivated.addListener(() => {
+getExtension().tabs.onActivated.addListener(() => {
   void refresh();
 });
 
-browser.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
+getExtension().tabs.onUpdated.addListener(async (tabId, changeInfo) => {
   if (changeInfo.status !== "complete") {
     return;
   }
-  const [active] = await browser.tabs.query({
+  const [active] = await getExtension().tabs.query({
     active: true,
     currentWindow: true
   });
