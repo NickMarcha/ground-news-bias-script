@@ -2,7 +2,7 @@ import { defineConfig } from "tsup";
 
 const userscriptBanner = `// ==UserScript==
 // @name         Ground News Lookup (Minimal)
-// @namespace    https://github.com/nicol/ground-news-bias-userscript
+// @namespace    https://github.com/NickMarcha/ground-news-bias-script
 // @version      0.0.0-dev
 // @description  Manual Ground News lookup for current page URL
 // @author       Nicol
@@ -13,6 +13,7 @@ const userscriptBanner = `// ==UserScript==
 // @grant        GM_xmlhttpRequest
 // @connect      extension.ground.news
 // @connect      production.checkitt.news
+// @connect      groundnews.b-cdn.net
 // ==/UserScript==`;
 
 export default defineConfig({
