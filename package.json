@@ -1,0 +1,14 @@
+{
+  "name": "ground-news-bias-userscript",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npx tsup",
+    "dev": "npx tsup --watch",
+    "check": "npx tsc --noEmit"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.6",
+    "typescript": "^5.9.3"
+  }
+}
