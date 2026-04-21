@@ -14,6 +14,8 @@ on:
       - "scripts/build-extension.mjs"
       - "package.json"
       - "package-lock.json"
+      - "docs/MOZILLA_REVIEW_README.md"
+      - "scripts/package-amo-source.mjs"
       - ".github/workflows/firefox-extension.yml"
   workflow_dispatch:
 

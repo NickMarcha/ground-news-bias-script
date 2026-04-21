@@ -64,6 +64,8 @@ If DevTools still reports **Quirks Mode**, confirm the **selected frame** is you
 Workflow: [`.github/workflows/firefox-extension.yml`](.github/workflows/firefox-extension.yml)
 
 - Always builds the extension and uploads an **unsigned zip** artifact (`firefox-extension-unsigned-zip`) for manual upload to [AMO](https://addons.mozilla.org/) when you are getting the first version listed.
+- **AMO source upload** (bundled/minified JS): run `npm run package:amo-source` to create `extension/artifacts/ground-news-lookup-firefox-source.zip` (includes `README.md` with build steps for reviewers). See also [`docs/MOZILLA_REVIEW_README.md`](docs/MOZILLA_REVIEW_README.md).
+- **AMO listing icon** (128×128 PNG for the store page): [`docs/amo-listing-icon-128.png`](docs/amo-listing-icon-128.png). Regenerate after logo changes with `npm run icon:amo-listing` (uses [`extension/public/icons/icon.svg`](extension/public/icons/icon.svg) on a dark background so the white mark stays visible on AMO’s light UI).
 - If you add repository secrets **`WEB_EXT_API_KEY`** and **`WEB_EXT_API_SECRET`** (from the Firefox Developer Hub API credentials used by [`web-ext sign`](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-sign)), the same workflow will also run signing and upload a **signed `.xpi`** artifact. If those secrets are missing, the sign step exits successfully with a notice and does nothing else.
 
 #### Add-on ID (`browser_specific_settings.gecko.id`)
